@@ -4,13 +4,14 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Threading.Tasks;
 
-namespace PoshCode
+namespace PoshCode.PowerShell
 {
     public static class RemotePowerShell
     {
         public static Runspace Connect(string computerName = "localhost", PSCredential credential = null, string name = null, string scheme = "http", int port = 5985, string appName = "wsman", string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell")
         {
             var connection = new WSManConnectionInfo(scheme, computerName, port, appName, shellUri, credential);
+            // connection.IdleTimeout = 
             var runspace = RunspaceFactory.CreateRunspace(connection);
 
             if (!string.IsNullOrEmpty(name))
@@ -27,7 +28,7 @@ namespace PoshCode
             return Connect(computerName, credential, name, useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp, port, appName, $"http://schemas.microsoft.com/powershell/{shellName}");
         }
 
-        public static PowerShell Create(string computerName = "localhost", PSCredential credential = null, string name = null, string scheme = "http", int port = 5985, string appName = "wsman", string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell")
+        public static System.Management.Automation.PowerShell Create(string computerName = "localhost", PSCredential credential = null, string name = null, string scheme = "http", int port = 5985, string appName = "wsman", string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell")
         {
             var connection = new WSManConnectionInfo(scheme, computerName, port, appName, shellUri, credential);
             var runspace = RunspaceFactory.CreateRunspace(connection);
@@ -38,13 +39,13 @@ namespace PoshCode
             }
 
             runspace.Open();
-            var powershell = PowerShell.Create();
+            var powershell = System.Management.Automation.PowerShell.Create();
             powershell.Runspace = runspace;
 
             return powershell;
         }
 
-        public static PowerShell Create(string computerName = "localhost", string shellName = "Microsoft.PowerShell", PSCredential credential = null, string name = null, bool useSsl = false, int port = 5985, string appName = "wsman")
+        public static System.Management.Automation.PowerShell Create(string computerName = "localhost", string shellName = "Microsoft.PowerShell", PSCredential credential = null, string name = null, bool useSsl = false, int port = 5985, string appName = "wsman")
         {
             return Create(computerName, credential, name, useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp, port, appName, $"http://schemas.microsoft.com/powershell/{shellName}");
         }
