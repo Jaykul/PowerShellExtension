@@ -110,5 +110,31 @@ namespace PoshCode
             }
         }
 
+        public static Collection<PSObject> Invoke(this Runspace runspace, string script, IDictionary parameters = null, Action<PSDataStreams> psDataStreamAction = null)
+        {
+
+            if (script == null)
+            {
+                throw new ArgumentOutOfRangeException("script");
+            }
+
+            if (runspace == null)
+            {
+                throw new ArgumentOutOfRangeException("runspace");
+            }
+
+            using (PowerShell ps = PowerShell.Create())
+            {
+                ps.Runspace = runspace;
+                ps.AddScript(script);
+
+                if (parameters != null && parameters.Count > 0) ps.AddParameters(parameters);
+
+                psDataStreamAction?.Invoke(ps.Streams);
+
+                return ps.Invoke();
+            }
+        }
+
     }
 }
