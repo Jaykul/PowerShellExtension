@@ -17,6 +17,8 @@ namespace PoshCode
             {
                 runspace.Name = name;
             }
+            runspace.Open();
+
             return runspace;
         }
 
@@ -24,8 +26,6 @@ namespace PoshCode
         {
             return Connect(computerName, credential, name, useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp, port, appName, $"http://schemas.microsoft.com/powershell/{shellName}");
         }
-
-
 
         public static PowerShell Create(string computerName = "localhost", PSCredential credential = null, string name = null, string scheme = "http", int port = 5985, string appName = "wsman", string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell")
         {
@@ -63,7 +63,7 @@ namespace PoshCode
         {
             var runspace = Connect(computerName, credential);
             var task = runspace.InvokeAsync(script, parameters);
-            runspace.DisconnectAsync();
+            runspace.Disconnect();
             return task;
         }
 
