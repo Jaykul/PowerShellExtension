@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
@@ -11,7 +11,7 @@ namespace PoshCode.PowerShell
         public static Runspace Connect(string computerName = "localhost", PSCredential credential = null, string name = null, string scheme = "http", int port = 5985, string appName = "wsman", string shellUri = "http://schemas.microsoft.com/powershell/Microsoft.PowerShell")
         {
             var connection = new WSManConnectionInfo(scheme, computerName, port, appName, shellUri, credential);
-            // connection.IdleTimeout = 
+            connection.IdleTimeout = 3 * 1000 * 60; // three minutes
             var runspace = RunspaceFactory.CreateRunspace(connection);
 
             if (!string.IsNullOrEmpty(name))
